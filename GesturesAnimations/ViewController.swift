@@ -1,6 +1,6 @@
 //
 //  ViewController.swift
-//  Gestures&Animations
+//  GesturesAnimations
 //
 //  Created on: 03-June-2016
 //      Author: Nafisa Rahman
