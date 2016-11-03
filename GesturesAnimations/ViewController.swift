@@ -56,7 +56,7 @@ class ViewController: UIViewController {
         //MARK: double tap gesture
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(doubleTapAction(_:)))
         doubleTap.numberOfTapsRequired = 2
-        tap.requireGestureRecognizerToFail(doubleTap)
+        tap.require(toFail: doubleTap)
         box.addGestureRecognizer(doubleTap)
         
         
@@ -82,34 +82,34 @@ class ViewController: UIViewController {
         
         //MARK: left screen edge pan gesture
         let leftEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(leftEdgePanAction(_:)))
-        leftEdgePan.edges = UIRectEdge.Left
+        leftEdgePan.edges = UIRectEdge.left
         self.view.addGestureRecognizer(leftEdgePan)
         
         
         //MARK: right screen edge pan gesture
         let rightEdgePan = UIScreenEdgePanGestureRecognizer(target: self, action: #selector(rightEdgePanAction(_:)))
-        rightEdgePan.edges = UIRectEdge.Right
+        rightEdgePan.edges = UIRectEdge.right
         self.view.addGestureRecognizer(rightEdgePan)
         
         
         //MARK: swipe left gesture
         let leftSwipe = UISwipeGestureRecognizer(target: self, action: #selector(leftSwipeAction(_:)))
-        leftSwipe.direction = UISwipeGestureRecognizerDirection.Left
-        pan.requireGestureRecognizerToFail(leftSwipe)
+        leftSwipe.direction = UISwipeGestureRecognizerDirection.left
+        pan.require(toFail: leftSwipe)
         box.addGestureRecognizer(leftSwipe)
         
         
         //MARK: swipe up gesture
         let upSwipe = UISwipeGestureRecognizer(target: self, action: #selector(upSwipeAction(_:)))
-        upSwipe.direction = UISwipeGestureRecognizerDirection.Up
-        pan.requireGestureRecognizerToFail(upSwipe)
+        upSwipe.direction = UISwipeGestureRecognizerDirection.up
+        pan.require(toFail: upSwipe)
         box.addGestureRecognizer(upSwipe)
         
         
         //MARK: swipe down gesture
         let downSwipe = UISwipeGestureRecognizer(target: self, action: #selector(downSwipeAction(_:)))
-        downSwipe.direction = UISwipeGestureRecognizerDirection.Down
-        pan.requireGestureRecognizerToFail(downSwipe)
+        downSwipe.direction = UISwipeGestureRecognizerDirection.down
+        pan.require(toFail: downSwipe)
         box.addGestureRecognizer(downSwipe)
     }
     
@@ -120,43 +120,42 @@ class ViewController: UIViewController {
     
     
     //MARK:- tap gesture action
-    func tapAction(sender: UITapGestureRecognizer){
+    func tapAction(_ sender: UITapGestureRecognizer){
         
         let animation = CABasicAnimation(keyPath: "opacity")
         animation.fromValue = 1.0
         animation.toValue = 0.5
         animation.repeatCount = 5
-        box.layer.addAnimation(animation,forKey: "opacity")
+        box.layer.add(animation,forKey: "opacity")
     }
     
     //MARK:- double tap action
-    func doubleTapAction(sender: UITapGestureRecognizer){
+    func doubleTapAction(_ sender: UITapGestureRecognizer){
         
         let animation = CABasicAnimation(keyPath: "cornerRadius")
         animation.fromValue = 70.0
         animation.toValue = 40.0
         animation.repeatCount = 5
-        box.layer.addAnimation(animation, forKey: "cornerRadius")
+        box.layer.add(animation, forKey: "cornerRadius")
         
     }
     
     //MARK:- long press action
-    func longPressAction(sender: UILongPressGestureRecognizer){
+    func longPressAction(_ sender: UILongPressGestureRecognizer){
         
-        box.layer.borderColor = UIColor.yellowColor().CGColor
+        box.layer.borderColor = UIColor.yellow.cgColor
         
         let animation = CABasicAnimation(keyPath: "borderWidth")
         animation.fromValue = 10.0
         animation.toValue = 50.0
         animation.repeatDuration = 2.0
-        box.layer.addAnimation(animation, forKey: "borderWidth")
+        box.layer.add(animation, forKey: "borderWidth")
     }
     
     //MARK:- pinch action
-    func pinchAction(sender: UIPinchGestureRecognizer){
+    func pinchAction(_ sender: UIPinchGestureRecognizer){
         
-        sender.view!.transform = CGAffineTransformScale(sender.view!.transform,
-                                                        sender.scale, sender.scale)
+        sender.view!.transform = sender.view!.transform.scaledBy(x: sender.scale, y: sender.scale)
         sender.scale = 1
         
         
@@ -165,53 +164,53 @@ class ViewController: UIViewController {
         animation.toValue = 0
         animation.repeatCount = 1
         
-        animation.removedOnCompletion = false
+        animation.isRemovedOnCompletion = false
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        box.layer.addAnimation(animation, forKey: "scale")
+        box.layer.add(animation, forKey: "scale")
         
     }
     
     
     //MARK:- rotate action
-    func rotateAction(sender: UIRotationGestureRecognizer){
+    func rotateAction(_ sender: UIRotationGestureRecognizer){
         
-        sender.view!.transform = CGAffineTransformRotate(sender.view!.transform, sender.rotation)
+        sender.view!.transform = sender.view!.transform.rotated(by: sender.rotation)
         
         let animation:CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation")
         
         animation.toValue = M_PI
         animation.repeatCount = 5
         
-        animation.removedOnCompletion = false
+        animation.isRemovedOnCompletion = false
         animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        box.layer.addAnimation(animation, forKey: "rotation")
+        box.layer.add(animation, forKey: "rotation")
         
     }
     
     //MARK:- pan action
-    func panAction(sender: UIPanGestureRecognizer){
+    func panAction(_ sender: UIPanGestureRecognizer){
         
-        let translate = sender.translationInView(self.view)
-        sender.view?.center =  CGPointMake((sender.view?.center.x)! + translate.x, (sender.view?.center.y)! + translate.y)
-        sender.setTranslation(CGPointZero, inView: self.view)
+        let translate = sender.translation(in: self.view)
+        sender.view?.center =  CGPoint(x: (sender.view?.center.x)! + translate.x, y: (sender.view?.center.y)! + translate.y)
+        sender.setTranslation(CGPoint.zero, in: self.view)
         
         
-        if sender.state == .Changed{
+        if sender.state == .changed{
             let animation = CABasicAnimation(keyPath: "backgroundColor")
-            animation.fromValue = UIColor.redColor().CGColor
-            animation.toValue = UIColor.greenColor().CGColor
+            animation.fromValue = UIColor.red.cgColor
+            animation.toValue = UIColor.green.cgColor
             animation.repeatCount = 5
-            box.layer.addAnimation(animation, forKey: "backgroundColor")
+            box.layer.add(animation, forKey: "backgroundColor")
             
         }
         
     }
     
     //MARK:- left swipe action
-    func leftSwipeAction(sender: UISwipeGestureRecognizer){
+    func leftSwipeAction(_ sender: UISwipeGestureRecognizer){
         
         animator?.removeAllBehaviors()
-        let leftPush = UIPushBehavior(items: [box], mode: UIPushBehaviorMode.Continuous)
+        let leftPush = UIPushBehavior(items: [box], mode: UIPushBehaviorMode.continuous)
         
         let vector = CGVector(dx: -20.0, dy: 0.0)
         leftPush.pushDirection = vector
@@ -222,14 +221,14 @@ class ViewController: UIViewController {
         
         let collison = UICollisionBehavior(items: [box])
         collison.translatesReferenceBoundsIntoBoundary = true
-        collison.collisionMode = .Boundaries
+        collison.collisionMode = .boundaries
         animator?.addBehavior(collison)
     }
     
     
     
     //MARK:- upSwipe action
-    func upSwipeAction(sender: UISwipeGestureRecognizerDirection){
+    func upSwipeAction(_ sender: UISwipeGestureRecognizerDirection){
         
         animator?.removeAllBehaviors()
         
@@ -243,13 +242,13 @@ class ViewController: UIViewController {
         
         let collison = UICollisionBehavior(items: [box])
         collison.translatesReferenceBoundsIntoBoundary = true
-        collison.collisionMode = .Boundaries
+        collison.collisionMode = .boundaries
         animator?.addBehavior(collison)
     }
     
     
     //MARK:- down Swipe action
-    func downSwipeAction(sender: UISwipeGestureRecognizerDirection){
+    func downSwipeAction(_ sender: UISwipeGestureRecognizerDirection){
         
         animator?.removeAllBehaviors()
         
@@ -262,32 +261,32 @@ class ViewController: UIViewController {
         animator?.addBehavior(gravity)
         
         let collision = UICollisionBehavior(items: [box])
-        collision.collisionMode = .Everything
+        collision.collisionMode = .everything
         collision.translatesReferenceBoundsIntoBoundary = true
         animator?.addBehavior(collision)
     }
     
     //MARK:- left edge pan gesture
-    func leftEdgePanAction(sender: UIScreenEdgePanGestureRecognizer){
+    func leftEdgePanAction(_ sender: UIScreenEdgePanGestureRecognizer){
         
         animator?.removeAllBehaviors()
         
-        let position = sender.locationInView(self.view)
+        let position = sender.location(in: self.view)
         
         animator = UIDynamicAnimator(referenceView: view)
-        let snap = UISnapBehavior(item: box, snapToPoint: position)
+        let snap = UISnapBehavior(item: box, snapTo: position)
         animator?.addBehavior(snap)
     }
     
     //MARK:- right edge pan gesture
-    func rightEdgePanAction(sender: UIScreenEdgePanGestureRecognizer){
+    func rightEdgePanAction(_ sender: UIScreenEdgePanGestureRecognizer){
         
         animator?.removeAllBehaviors()
         
-        let position = sender.locationInView(self.view)
+        let position = sender.location(in: self.view)
         
         animator = UIDynamicAnimator(referenceView: view)
-        let snap = UISnapBehavior(item: box, snapToPoint: position)
+        let snap = UISnapBehavior(item: box, snapTo: position)
         animator?.addBehavior(snap)
         
     }
